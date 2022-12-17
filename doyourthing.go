@@ -7,43 +7,66 @@ package main
 
 import (
 	"fmt"
+	"golang.org/x/term"
 	"os"
 )
 
+const ctrlC = 3
+const backspace = 8
+const carriageReturn = 13
+const becomes = "  =>  "
+
 func doyourthing(flags int, whoknows []whadhesay) {
+	fmt.Println("\nBegin typing.  Known translations will be preceded by =>.  Press Enter to clear, Ctrl-C to quit.")
+	fmt.Println()
+	// put stdin in raw mode
+	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
 	b := make([]byte, 1)
+	var said, means, output string
+	prevLen := 0
 
-	var err error
-	var said string
-
-	echo("", "")
 	for {
-
 		_, err = os.Stdin.Read(b)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-
-		hit := string(b[0])
-
-		switch { // ya gotta love that
+		switch {
 		case b[0] == ctrlC:
 			return
-		case hit == backspace:
-			len := len(said)
-			if len > 0 {
-				said = said[:len-1]
-			}
-		case b[0] == enter:
+		case b[0] == carriageReturn:
 			said = ""
+		case b[0] == backspace:
+			if len(said) > 0 {
+				said = said[0 : len(said)-1]
+			}
 		default:
-			said += hit
+			said += string(b[0])
 		}
+		means = translate(said, whoknows, flags)
+		if means != said {
+			output = said + becomes + means
+		} else {
+			output = said
+		}
+		for dif := prevLen - len(output); dif > 0; dif-- {
+			output += " "
+		}
+		b[0] = carriageReturn
+		_, _ = os.Stdout.Write(b)
+		_, _ = os.Stdout.WriteString(output)
 
-		means := translate(said, whoknows, flags)
-		echo(said, means)
+		b[0] = backspace
+		for dif := len(output) - len(said); dif > 0; dif-- {
+			os.Stdout.Write(b)
+		}
+		prevLen = len(output)
 	}
 
 }

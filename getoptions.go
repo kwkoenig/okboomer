@@ -16,7 +16,6 @@ func getoptions() int {
 	var flags int
 
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println(clear)
 	fmt.Print("\nGreetings, wise one.  What will we be translating today?  (m)illennial and/or (t)ext and/or (g)amer, or (a)ll three?: ")
 	reply, _ := reader.ReadString('\n')
 	if !checksout(reply) {

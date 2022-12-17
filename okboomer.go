@@ -5,18 +5,6 @@
 
 package main
 
-import (
-	"fmt"
-)
-
-const newline = "\n"
-const cr = "\r"
-const backspace = "\b"
-const prevline = "\033[F"
-const clear = "\033c"
-const ctrlC = 3
-const enter = 13
-
 // Bits in a byte.  Old school.
 const millennial = 1
 const text = 2
@@ -34,13 +22,7 @@ func main() {
 
 	flags := getoptions()
 
-	// put the terminal in raw mode
-	oldState := goraw()
-	defer cookit(oldState)
-
 	whoknows := damnkids()
 	doyourthing(flags, whoknows)
-
-	fmt.Println(clear)
 
 }
