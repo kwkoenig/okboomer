@@ -26,5 +26,5 @@ func main() {
 	blackbox := make(chan byte)
 	go byteReader(blackbox)
 	doyourthing(blackbox, flags, whoknows)
-
+	close(blackbox)
 }

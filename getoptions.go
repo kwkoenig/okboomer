@@ -74,6 +74,7 @@ func naptime() {
 	fmt.Println("\nYou know, it may be time for a nap.  Good day to you.  Would you be so kind as to press any key?")
 	fmt.Println()
 	pipe := make(chan byte)
+	defer close(pipe)
 	go byteReader(pipe)
 	<-pipe
 	os.Exit(1)
