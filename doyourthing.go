@@ -79,7 +79,7 @@ func writeabyte(b byte) {
 		os.Exit(1)
 	}
 	if n != 1 {
-		fmt.Println("Zero bytes written but without error")
+		fmt.Println("bytes written <> 1 but without error")
 		os.Exit(1)
 	}
 }
