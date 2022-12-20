@@ -39,6 +39,7 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 			}
 		default:
 			temp, tempLen := translate(said+string(b), whoknows, flags)
+			// MUST check terminal width each time since user can resize.
 			w, _, err := term.GetSize(int(os.Stdout.Fd()))
 			if err != nil {
 				fmt.Println(err)
@@ -82,7 +83,7 @@ func writeabyte(b byte) {
 		os.Exit(1)
 	}
 	if n != 1 {
-		fmt.Println("bytes written <> 1 but without error")
+		fmt.Println("bytes written <> 1 but no error was thrown.  go figure.  exiting.")
 		os.Exit(1)
 	}
 }
