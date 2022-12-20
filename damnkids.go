@@ -29,7 +29,6 @@ func damnkids() []whadhesay {
 		{"nsfw", "not safe for work", text},
 		{"nvm", "never mind", text},
 		{"omg", "oh my gosh", text},
-		{"omg", "oh my god", text + nsfw},
 		{"omw", "on my way", text},
 		{"rofl", "rolling on the floor laughing", text},
 		{"thx", "thanks", text},
