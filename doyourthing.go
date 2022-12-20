@@ -11,10 +11,10 @@ import (
 	"os"
 )
 
-const ctrlC = 3
-const bell = 7
-const backspace = 8
-const carriageReturn = 13
+const ctrlC byte = 3
+const bell byte = 7
+const backspace byte = 8
+const carriageReturn byte = 13
 
 func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 	fmt.Println("\nBegin typing.  Known translations will be preceded by =>.  Press Enter to clear, Ctrl-C to quit.")
@@ -22,8 +22,6 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 	var said, padded string
 	var prevLen int
 	var b byte
-
-	byteArr := make([]byte, 1)
 
 	for {
 		b = <-blackbox
@@ -38,10 +36,13 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 			}
 		default:
 			_, tempLen := translate(said+string(b), whoknows, flags)
-			w, _, _ := term.GetSize(int(os.Stdout.Fd()))
+			w, _, err := term.GetSize(int(os.Stdout.Fd()))
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 			if tempLen > w-1 {
-				byteArr[0] = bell
-				_, _ = os.Stdout.Write(byteArr)
+				writeabyte(bell)
 			} else {
 				said += string(b)
 			}
@@ -54,15 +55,31 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 			}
 		}
 
-		byteArr[0] = carriageReturn
-		_, _ = os.Stdout.Write(byteArr)
-		_, _ = os.Stdout.WriteString(padded)
+		writeabyte(carriageReturn)
+		_, err := os.Stdout.WriteString(padded)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 
-		byteArr[0] = backspace
 		for dif := len(padded) - len(said); dif > 0; dif-- {
-			os.Stdout.Write(byteArr)
+			writeabyte(backspace)
 		}
 		prevLen = evalLen
 	}
 
+}
+
+func writeabyte(b byte) {
+	byteBuf := make([]byte, 1)
+	byteBuf[0] = b
+	n, err := os.Stdout.Write(byteBuf)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if n != 1 {
+		fmt.Println("Zero bytes written but without error")
+		os.Exit(1)
+	}
 }
