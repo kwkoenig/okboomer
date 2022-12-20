@@ -17,7 +17,7 @@ func translate(said string, whoknows []whadhesay, flags int) (string, int) {
 		if strings.Contains(means, whoknows[i].said) {
 			if whoknows[i].flags&languages > 0 {
 				pottymouth := isnsfw(whoknows[i].flags)
-				if !pottymouth || notatwork {
+				if notatwork || !pottymouth {
 					means = strings.ReplaceAll(means, whoknows[i].said, whoknows[i].means)
 				}
 			}
