@@ -23,6 +23,8 @@ func main() {
 	flags := getoptions()
 
 	whoknows := damnkids()
-	doyourthing(flags, whoknows)
+	blackbox := make(chan byte)
+	go byteReader(blackbox)
+	doyourthing(blackbox, flags, whoknows)
 
 }

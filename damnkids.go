@@ -15,6 +15,7 @@ func damnkids() []whadhesay {
 		{"dm", "direct message", text},
 		{"ftw", "for the win", text},
 		{"fwiw", "for what it's worth", text},
+		{"idk", "i don't know", text},
 		{"ikr", "i know, right?", text},
 		{"imho", "in my humble opinion", text},
 		{"imo", "in my opinion", text},
