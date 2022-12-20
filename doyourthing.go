@@ -29,9 +29,7 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 		case ctrlC:
 			return
 		case carriageReturn:
-			said = ""
-			eval = ""
-			evalLen = 0
+			said, eval, evalLen = "", "", 0
 		case backspace:
 			if len(said) > 0 {
 				said = said[:len(said)-1]
