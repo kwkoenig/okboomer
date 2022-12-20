@@ -49,7 +49,7 @@ func doyourthing(flags int, whoknows []whadhesay) {
 		default:
 			_, tempLen := translate(said+string(b[0]), whoknows, flags)
 			w, _, _ := term.GetSize(int(os.Stdout.Fd()))
-			if tempLen > w {
+			if tempLen > w-1 {
 				b[0] = bell
 				_, _ = os.Stdout.Write(b)
 			} else {
