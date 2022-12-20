@@ -41,6 +41,8 @@ func damnkids() []whadhesay {
 		{"a thing", "something people know about", millennial},
 		{"i can't even", "i'm overwhelmed", millennial},
 		{"i cant even", "i'm overwhelmed", millennial},
+		{"i literally can't even", "i'm figuatively overwhelmed", millennial},
+		{"i literally cant even", "i'm figuratively overwhelmed", millennial},
 		{"literally", "figuratively", millennial},
 		{"ok boomer", "sure old man", millennial},
 		{"boomer", "old man", millennial},

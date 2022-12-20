@@ -12,9 +12,9 @@ import (
 )
 
 const ctrlC = 3
+const bell = 7
 const backspace = 8
 const carriageReturn = 13
-const becomes = "  =>  "
 
 func doyourthing(flags int, whoknows []whadhesay) {
 	fmt.Println("\nBegin typing.  Known translations will be preceded by =>.  Press Enter to clear, Ctrl-C to quit.")
@@ -28,8 +28,8 @@ func doyourthing(flags int, whoknows []whadhesay) {
 	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
 	b := make([]byte, 1)
-	var said, means, output string
-	prevLen := 0
+	var said, padded string
+	var prevLen int
 
 	for {
 		_, err = os.Stdin.Read(b)
@@ -44,29 +44,35 @@ func doyourthing(flags int, whoknows []whadhesay) {
 			said = ""
 		case b[0] == backspace:
 			if len(said) > 0 {
-				said = said[0 : len(said)-1]
+				said = said[:len(said)-1]
 			}
 		default:
-			said += string(b[0])
+			_, tempLen := translate(said+string(b[0]), whoknows, flags)
+			w, _, _ := term.GetSize(int(os.Stdout.Fd()))
+			if tempLen > w {
+				b[0] = bell
+				_, _ = os.Stdout.Write(b)
+			} else {
+				said += string(b[0])
+			}
 		}
-		means = translate(said, whoknows, flags)
-		if means != said {
-			output = said + becomes + means
-		} else {
-			output = said
+		eval, evalLen := translate(said, whoknows, flags)
+		padded = eval
+		if evalLen < prevLen {
+			for i := evalLen; i < prevLen; i++ {
+				padded += " "
+			}
 		}
-		for dif := prevLen - len(output); dif > 0; dif-- {
-			output += " "
-		}
+
 		b[0] = carriageReturn
 		_, _ = os.Stdout.Write(b)
-		_, _ = os.Stdout.WriteString(output)
+		_, _ = os.Stdout.WriteString(padded)
 
 		b[0] = backspace
-		for dif := len(output) - len(said); dif > 0; dif-- {
+		for dif := len(padded) - len(said); dif > 0; dif-- {
 			os.Stdout.Write(b)
 		}
-		prevLen = len(output)
+		prevLen = evalLen
 	}
 
 }
