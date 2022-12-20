@@ -25,12 +25,12 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 
 	for {
 		b = <-blackbox
-		switch {
-		case b == ctrlC:
+		switch b {
+		case ctrlC:
 			return
-		case b == carriageReturn:
+		case carriageReturn:
 			said = ""
-		case b == backspace:
+		case backspace:
 			if len(said) > 0 {
 				said = said[:len(said)-1]
 			}
