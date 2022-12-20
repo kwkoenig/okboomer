@@ -22,7 +22,7 @@ func getoptions() int {
 		fmt.Print("\nLet's try that again.  Please enter any combination of the letters m, t, g, or a, per the above instructions: ")
 		reply, _ = reader.ReadString('\n')
 		if !checksout(reply) {
-			naptime()
+			naptime(reader)
 			return 0
 		}
 	}
@@ -47,7 +47,7 @@ func getoptions() int {
 		fmt.Print("\nLet's try that again.  Please enter either s or n, per the previous instructions: ")
 		reply, _ = reader.ReadString('\n')
 		if !strings.HasPrefix(reply, "s") && !strings.HasPrefix(reply, "n") {
-			naptime()
+			naptime(reader)
 			return 0
 		}
 	}
@@ -70,8 +70,11 @@ func checksout(input string) bool {
 		strings.Contains(lower, "a")
 }
 
-func naptime() {
-	fmt.Println("\nYou know, it may be time for a nap.  Good day to you sir.")
+func naptime(reader *bufio.Reader) {
+	fmt.Println("\nYou know, it may be time for a nap.  Good day to you.  Would you be so kind as to press any key?")
 	fmt.Println()
-	defer os.Exit(1)
+	pipe := make(chan byte)
+	go byteReader(pipe)
+	<-pipe
+	os.Exit(1)
 }
