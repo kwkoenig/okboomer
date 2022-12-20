@@ -19,8 +19,8 @@ const carriageReturn byte = 13
 func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 	fmt.Println("\nBegin typing.  Known translations will be preceded by =>.  Press Enter to clear, Ctrl-C to quit.")
 	fmt.Println()
-	var said, padded string
-	var prevLen int
+	var said, eval, padded string
+	var evalLen, prevLen int
 	var b byte
 
 	for {
@@ -30,12 +30,15 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 			return
 		case carriageReturn:
 			said = ""
+			eval = ""
+			evalLen = 0
 		case backspace:
 			if len(said) > 0 {
 				said = said[:len(said)-1]
+				eval, evalLen = translate(said, whoknows, flags)
 			}
 		default:
-			_, tempLen := translate(said+string(b), whoknows, flags)
+			temp, tempLen := translate(said+string(b), whoknows, flags)
 			w, _, err := term.GetSize(int(os.Stdout.Fd()))
 			if err != nil {
 				fmt.Println(err)
@@ -45,9 +48,9 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 				writeabyte(bell)
 			} else {
 				said += string(b)
+				eval, evalLen = temp, tempLen
 			}
 		}
-		eval, evalLen := translate(said, whoknows, flags)
 		padded = eval
 		if evalLen < prevLen {
 			for i := evalLen; i < prevLen; i++ {
