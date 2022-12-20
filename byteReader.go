@@ -30,6 +30,9 @@ func byteReader(blackbox chan byte) {
 		}
 		if n == 1 {
 			blackbox <- b[0]
+		} else {
+			fmt.Println("bytes read <> 1 but no error was thrown.  go figure.  exiting.")
+			os.Exit(1)
 		}
 	}
 }
