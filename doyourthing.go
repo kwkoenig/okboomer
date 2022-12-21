@@ -23,7 +23,7 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 	var evalLen, prevLen int
 	var b byte
 
-	for {
+	for ; ; prevLen = evalLen {
 		b = <-blackbox
 		switch b {
 		case ctrlC:
@@ -63,11 +63,7 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-
-		for dif := len(padded) - len(said); dif > 0; dif-- {
-			writeabyte(backspace)
-		}
-		prevLen = evalLen
+		backup(len(padded) - len(said))
 	}
 
 }
@@ -75,13 +71,28 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 func writeabyte(b byte) {
 	byteBuf := make([]byte, 1)
 	byteBuf[0] = b
-	n, err := os.Stdout.Write(byteBuf)
+	writeit(byteBuf)
+}
+
+func backup(howmany int) {
+	if howmany < 1 {
+		return
+	}
+	buf := make([]byte, howmany)
+	for i := 0; i < howmany; i++ {
+		buf[i] = backspace
+	}
+	writeit(buf)
+}
+
+func writeit(b []byte) {
+	n, err := os.Stdout.Write(b)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	if n != 1 {
-		fmt.Println("bytes written <> 1 but no error was thrown.  go figure.  exiting.")
+	if n != len(b) {
+		fmt.Println("bytes written != buffer length but no error was thrown.  go figure.  exiting.")
 		os.Exit(1)
 	}
 }
