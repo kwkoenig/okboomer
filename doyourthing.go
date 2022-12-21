@@ -63,7 +63,9 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		backup(len(padded) - len(said))
+		if diff := len(padded) - len(said); diff > 0 {
+			backup(diff)
+		}
 	}
 
 }
@@ -75,9 +77,6 @@ func writeabyte(b byte) {
 }
 
 func backup(howmany int) {
-	if howmany < 1 {
-		return
-	}
 	buf := make([]byte, howmany)
 	for i := 0; i < howmany; i++ {
 		buf[i] = backspace
