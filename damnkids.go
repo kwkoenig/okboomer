@@ -11,6 +11,7 @@ func damnkids() []whadhesay {
 	results := []whadhesay{
 		{"bc", "because", text},
 		{"btw", "by the way", text},
+		{"brb", "be right back", text},
 		{"cya", "see you", text},
 		{"dm", "direct message", text},
 		{"ftw", "for the win", text},

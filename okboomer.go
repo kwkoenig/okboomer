@@ -20,7 +20,12 @@ type whadhesay struct {
 
 func main() {
 
-	flags := getoptions()
+	var flags int
+	// I just cant resist go's if with a statement
+	// It's almost as good as C's non-zero == true
+	if flags = getoptions(); flags == 0 {
+		return
+	}
 
 	whoknows := damnkids()
 	blackbox := make(chan byte)
