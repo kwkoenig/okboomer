@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"golang.org/x/term"
+	"os"
 )
 
 func raw() *term.State {
