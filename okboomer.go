@@ -29,7 +29,10 @@ func main() {
 
 	whoknows := damnkids()
 	blackbox := make(chan byte)
+	termstate := raw()
+
 	go byteReader(blackbox)
 	doyourthing(blackbox, flags, whoknows)
 	close(blackbox)
+	cook(termstate)
 }

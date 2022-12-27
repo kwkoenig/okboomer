@@ -7,19 +7,11 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/term"
 	"os"
 )
 
 func byteReader(blackbox chan byte) {
-	// put stdin in raw mode
-	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer term.Restore(int(os.Stdin.Fd()), oldState)
-
+	// terminal MUST be in raw mode
 	b := make([]byte, 1)
 
 	for {
