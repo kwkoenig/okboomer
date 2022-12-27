@@ -43,10 +43,10 @@ func getoptions() int {
 
 	fmt.Print("\nShould the interpretations be (s)afe for work, or is (n)ot safe acceptable? ")
 	reply, _ = reader.ReadString('\n')
-	if !strings.HasPrefix(reply, "s") && !strings.HasPrefix(reply, "n") {
+	if !sOrn(reply) {
 		fmt.Print("\nLet's try that again.  Please enter either s or n, per the previous instructions: ")
 		reply, _ = reader.ReadString('\n')
-		if !strings.HasPrefix(reply, "s") && !strings.HasPrefix(reply, "n") {
+		if !sOrn(reply) {
 			naptime()
 			return 0
 		}
@@ -68,6 +68,10 @@ func checksout(input string) bool {
 		strings.Contains(lower, "t") ||
 		strings.Contains(lower, "g") ||
 		strings.Contains(lower, "a")
+}
+
+func sOrn(reply string) bool {
+	return strings.HasPrefix(reply, "s") || strings.HasPrefix(reply, "n")
 }
 
 func naptime() {
