@@ -14,13 +14,19 @@ import (
 
 func getoptions() int {
 	var flags int
+	var reply string
+	var ok bool
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\nGreetings, wise one.  What will we be translating today?  (m)illennial and/or (t)ext and/or (g)amer, or (a)ll three?: ")
-	reply, _ := reader.ReadString('\n')
+	if reply, ok = readastring(reader); !ok {
+		return 0
+	}
 	if !checksout(reply) {
 		fmt.Print("\nLet's try that again.  Please enter any combination of the letters m, t, g, or a, per the above instructions: ")
-		reply, _ = reader.ReadString('\n')
+		if reply, ok = readastring(reader); !ok {
+			return 0
+		}
 		if !checksout(reply) {
 			naptime()
 			return 0
@@ -42,10 +48,14 @@ func getoptions() int {
 	}
 
 	fmt.Print("\nShould the interpretations be (s)afe for work, or is (n)ot safe acceptable? ")
-	reply, _ = reader.ReadString('\n')
+	if reply, ok = readastring(reader); !ok {
+		return 0
+	}
 	if !sOrn(reply) {
 		fmt.Print("\nLet's try that again.  Please enter either s or n, per the previous instructions: ")
-		reply, _ = reader.ReadString('\n')
+		if reply, ok = readastring(reader); !ok {
+			return 0
+		}
 		if !sOrn(reply) {
 			naptime()
 			return 0
@@ -57,6 +67,15 @@ func getoptions() int {
 	}
 
 	return flags
+}
+
+func readastring(reader *bufio.Reader) (string, bool) {
+	red, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println(err)
+		return red, false
+	}
+	return red, true
 }
 
 func checksout(input string) bool {
