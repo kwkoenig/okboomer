@@ -44,7 +44,9 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 				return
 			}
 			if tempLen > w-1 {
-				writeabyte(bell)
+				if !writeabyte(bell) {
+					return
+				}
 			} else {
 				said += string(b)
 				eval, evalLen = temp, tempLen
@@ -57,41 +59,46 @@ func doyourthing(blackbox chan byte, flags int, whoknows []whadhesay) {
 			}
 		}
 
-		writeabyte(carriageReturn)
+		if !writeabyte(carriageReturn) {
+			return
+		}
 		_, err := os.Stdout.WriteString(padded)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		if diff := len(padded) - len(said); diff > 0 {
-			backup(diff)
+			if !backup(diff) {
+				return
+			}
 		}
 	}
 
 }
 
-func writeabyte(b byte) {
+func writeabyte(b byte) bool {
 	byteBuf := make([]byte, 1)
 	byteBuf[0] = b
-	writeit(byteBuf)
+	return writeit(byteBuf)
 }
 
-func backup(howmany int) {
+func backup(howmany int) bool {
 	buf := make([]byte, howmany)
 	for i := 0; i < howmany; i++ {
 		buf[i] = backspace
 	}
-	writeit(buf)
+	return writeit(buf)
 }
 
-func writeit(b []byte) {
+func writeit(b []byte) bool {
 	n, err := os.Stdout.Write(b)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return false
 	}
 	if n != len(b) {
 		fmt.Println("bytes written != buffer length but no error was thrown.  go figure.  exiting.")
-		return
+		return false
 	}
+	return true
 }
