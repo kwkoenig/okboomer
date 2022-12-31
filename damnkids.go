@@ -40,6 +40,8 @@ func damnkids() []whadhesay {
 		{"wtf", "what the fuck", text + nsfw},
 		{"wtf", "what the flock", text},
 		{"a thing", "something people know about", millennial},
+		{"chill out", "settle down", millennial},
+		{"chill", "relax", millennial},
 		{"i can't even", "i'm overwhelmed", millennial},
 		{"i cant even", "i'm overwhelmed", millennial},
 		{"i literally can't even", "i'm figuatively overwhelmed", millennial},
