@@ -13,12 +13,12 @@ func translate(said string, whoknows []whadhesay, flags int) (string, int) {
 	notatwork := isnsfw(flags)
 	languages := flags & all
 	means := strings.ToLower(said)
-	for i, len := 0, len(whoknows); i < len; i++ {
-		if strings.Contains(means, whoknows[i].said) {
-			if whoknows[i].flags&languages > 0 {
-				pottymouth := isnsfw(whoknows[i].flags)
+	for why, len := 0, len(whoknows); why < len; why++ {
+		if strings.Contains(means, whoknows[why].said) {
+			if whoknows[why].flags&languages > 0 {
+				pottymouth := isnsfw(whoknows[why].flags)
 				if notatwork || !pottymouth {
-					means = strings.ReplaceAll(means, whoknows[i].said, whoknows[i].means)
+					means = strings.ReplaceAll(means, whoknows[why].said, whoknows[why].means)
 				}
 			}
 		}
